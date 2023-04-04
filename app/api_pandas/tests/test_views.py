@@ -1,4 +1,4 @@
-import datetime
+import os, json, datetime
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -120,3 +120,57 @@ class EmployeeViewSetTestCase(APITestCase):
     def test_employee_list_filtering(self):
         response = self.client.get(reverse('employee-list-create'), {'industry': 'IT'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class MockedDataCRUDTestCase(APITestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        # Load the mocked_data.json file
+        current_file_path = os.path.dirname(os.path.abspath(__file__))
+        mocked_data_file_path = os.path.join(current_file_path, 'MOCK_DATA.json')
+
+        with open(mocked_data_file_path, 'r') as file:
+            cls.mocked_data = json.load(file)[:10]
+
+    def test_crud_employees_from_mocked_data(self):
+        # test_create_employees_from_mocked_data
+        for employee_data in self.mocked_data:
+            response = self.client.post(
+                reverse('employee-list-create'),
+                data=employee_data,
+                format='json'
+            )
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # test_retrieve_employees_from_mocked_data
+        response = self.client.get(reverse('employee-list-create'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = response.json()["results"]
+
+        for employee_data in self.mocked_data:
+            found = False
+            for employee in response_data:
+                if employee['first_name'] == employee_data['first_name'] and employee['last_name'] == employee_data['last_name']:
+                    found = True
+                    break
+            self.assertTrue(found, f"Employee {employee_data['first_name']} {employee_data['last_name']} not found in the list")
+
+        # test_update_employees_from_mocked_data
+        for employee_data in self.mocked_data:
+            # Update salary
+            updated_employee_data = employee_data.copy()
+            updated_employee_data['salary'] = (float(employee_data['salary']) if employee_data['salary'] is not None else 0) + 1000
+
+            response = self.client.put(
+                reverse('employee-retrieve-update-destroy', kwargs={'pk': employee_data['id']}),
+                data=updated_employee_data,
+                format='json'
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # test_delete_employees_from_mocked_data
+        for employee_data in self.mocked_data:
+            response = self.client.delete(reverse('employee-retrieve-update-destroy', kwargs={'pk': employee_data['id']}))
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
