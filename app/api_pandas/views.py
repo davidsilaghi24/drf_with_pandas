@@ -36,21 +36,21 @@ def get_employee_dataframe():
 def average_age_per_industry(request):
     df = get_employee_dataframe()
     df['date_of_birth'] = pd.to_datetime(df['date_of_birth'])
-    df['age'] = (pd.Timestamp.now() - df['date_of_birth']).astype('<m8[Y]')
+    df['age'] = (pd.Timestamp.now() - df['date_of_birth']).dt.days // 365
     result = df.groupby('industry')['age'].mean().reset_index()
     return Response(result.to_dict(orient='records'))
 
 @api_view(['GET'])
 def average_salary_per_industry(request):
     df = get_employee_dataframe()
-    df['annual_income'] = pd.to_numeric(df['annual_income'])
-    result = df.groupby('industry')['annual_income'].mean().reset_index()
+    df['salary'] = pd.to_numeric(df['salary'])
+    result = df.groupby('industry')['salary'].mean().reset_index()
     return Response(result.to_dict(orient='records'))
 
 @api_view(['GET'])
 def average_salary_per_experience(request):
     df = get_employee_dataframe()
-    df['date_of_birth'] = pd.to_datetime(df['date_of_birth'])
-    df['years_of_experience'] = (pd.Timestamp.now() - df['date_of_birth']).astype('<m8[Y]')
-    result = df.groupby('years_of_experience')['annual_income'].mean().reset_index()
+    df['years_of_experience'] = pd.to_numeric(df['years_of_experience'])
+    df['salary'] = pd.to_numeric(df['salary'])
+    result = df.groupby('years_of_experience')['salary'].mean().reset_index()
     return Response(result.to_dict(orient='records'))

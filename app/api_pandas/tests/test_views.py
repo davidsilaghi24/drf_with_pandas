@@ -161,6 +161,118 @@ class MockedDataCRUDTestCase(APITestCase):
             )
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+        #test_average_age_per_industry
+        response = self.client.get(reverse('average-age-per-industry'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        #assertions to check response data for average_age_per_industry
+        data = response.json()
+
+        advertising = next(item for item in data if item['industry'] == 'Advertising')
+        self.assertAlmostEqual(advertising['age'], 67.0)
+
+        aerospace = next(item for item in data if item['industry'] == 'Aerospace')
+        self.assertAlmostEqual(aerospace['age'], 94.0)
+
+        agricultural_chemicals = next(item for item in data if item['industry'] == 'Agricultural Chemicals')
+        self.assertAlmostEqual(agricultural_chemicals['age'], 54.0)
+
+        air_freight_delivery_services = next(item for item in data if item['industry'] == 'Air Freight/Delivery Services')
+        self.assertAlmostEqual(air_freight_delivery_services['age'], 43.0)
+
+        apparel = next(item for item in data if item['industry'] == 'Apparel')
+        self.assertAlmostEqual(apparel['age'], 64.0)
+
+        auto_manufacturing = next(item for item in data if item['industry'] == 'Auto Manufacturing')
+        self.assertAlmostEqual(auto_manufacturing['age'], 32.0)
+
+        auto_parts_oem = next(item for item in data if item['industry'] == 'Auto Parts:O.E.M.')
+        self.assertAlmostEqual(auto_parts_oem['age'], 49.0)
+
+        automotive_aftermarket = next(item for item in data if item['industry'] == 'Automotive Aftermarket')
+        self.assertAlmostEqual(automotive_aftermarket['age'], 42.0)
+
+        banks = next(item for item in data if item['industry'] == 'Banks')
+        self.assertAlmostEqual(banks['age'], 56.8)
+
+        biotechnology_biological_products = next(item for item in data if item['industry'] == 'Biotechnology: Biological Products (No Diagnostic Substances)')
+        self.assertAlmostEqual(biotechnology_biological_products['age'], 32.333333333333336)
+
+        #test_average_salary_per_industry
+        response = self.client.get(reverse('average-salary-per-industry'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        #assertions to check response data for average_salary_per_industry
+        data = response.json()
+
+        advertising = next(item for item in data if item['industry'] == 'Advertising')
+        self.assertAlmostEqual(advertising['salary'], 86958.24)
+
+        aerospace = next(item for item in data if item['industry'] == 'Aerospace')
+        self.assertAlmostEqual(aerospace['salary'], 1000.0)
+
+        agricultural_chemicals = next(item for item in data if item['industry'] == 'Agricultural Chemicals')
+        self.assertAlmostEqual(agricultural_chemicals['salary'], 155098.84)
+
+        air_freight_delivery_services = next(item for item in data if item['industry'] == 'Air Freight/Delivery Services')
+        self.assertAlmostEqual(air_freight_delivery_services['salary'], 180357.63)
+
+        apparel = next(item for item in data if item['industry'] == 'Apparel')
+        self.assertAlmostEqual(apparel['salary'], 156957.58333333334)
+
+        auto_manufacturing = next(item for item in data if item['industry'] == 'Auto Manufacturing')
+        self.assertAlmostEqual(auto_manufacturing['salary'], 78859.77)
+
+        auto_parts_oem = next(item for item in data if item['industry'] == 'Auto Parts:O.E.M.')
+        self.assertAlmostEqual(auto_parts_oem['salary'], 165628.86)
+
+        automotive_aftermarket = next(item for item in data if item['industry'] == 'Automotive Aftermarket')
+        self.assertAlmostEqual(automotive_aftermarket['salary'], 124827.03333333334)
+
+        banks = next(item for item in data if item['industry'] == 'Banks')
+        self.assertAlmostEqual(banks['salary'], 150870.984)
+
+        biotechnology_biological_products = next(item for item in data if item['industry'] == 'Biotechnology: Biological Products (No Diagnostic Substances)')
+        self.assertAlmostEqual(biotechnology_biological_products['salary'], 171342.06666666668)
+
+
+        #test_average_salary_per_experience
+        response = self.client.get(reverse('average-salary-per-experience'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assertions to check response data for average_salary_per_experience
+        data = response.json()
+
+        two_years_of_experience = next(item for item in data if item['years_of_experience'] == 2)
+        self.assertAlmostEqual(two_years_of_experience['salary'], 148298.93357142858)
+
+        three_years_of_experience = next(item for item in data if item['years_of_experience'] == 3)
+        self.assertAlmostEqual(three_years_of_experience['salary'], 115574.91)
+
+        four_years_of_experience = next(item for item in data if item['years_of_experience'] == 4)
+        self.assertAlmostEqual(four_years_of_experience['salary'], 157010.267)
+
+        five_years_of_experience = next(item for item in data if item['years_of_experience'] == 5)
+        self.assertAlmostEqual(five_years_of_experience['salary'], 156833.75363636363)
+
+        six_years_of_experience = next(item for item in data if item['years_of_experience'] == 6)
+        self.assertAlmostEqual(six_years_of_experience['salary'], 159633.38571428572)
+
+        seven_years_of_experience = next(item for item in data if item['years_of_experience'] == 7)
+        self.assertAlmostEqual(seven_years_of_experience['salary'], 147415.14642857143)
+
+        eight_years_of_experience = next(item for item in data if item['years_of_experience'] == 8)
+        self.assertAlmostEqual(eight_years_of_experience['salary'], 133680.73666666666)
+
+        nine_years_of_experience = next(item for item in data if item['years_of_experience'] == 9)
+        self.assertAlmostEqual(nine_years_of_experience['salary'], 142040.0872222222)
+
+        ten_years_of_experience = next(item for item in data if item['years_of_experience'] == 10)
+        self.assertAlmostEqual(ten_years_of_experience['salary'], 155445.87473684212)
+
+        eleven_years_of_experience = next(item for item in data if item['years_of_experience'] == 11)
+        self.assertAlmostEqual(eleven_years_of_experience['salary'], 122410.22153846153)
+
         # test_delete_employees_from_mocked_data
         for employee_data in self.mocked_data:
             response = self.client.delete(reverse('employee-retrieve-update-destroy', kwargs={'pk': employee_data['id']}))
