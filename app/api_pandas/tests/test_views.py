@@ -16,8 +16,21 @@ class EmployeeViewSetTestCase(APITestCase):
             other_fields={"title": "Software Engineer"},
         )
 
+         # Create 9 more employees
+        for i in range(2, 11):
+            Employee.objects.create(
+                unique_id=f"A00{i}",
+                first_name=f"Employee{i}",
+                last_name="Doe",
+                date_of_birth=datetime.date(1990, 1, 1),
+                industry="Software",
+                annual_income=50000,
+                other_fields={"title": "Software Engineer"},
+            )
+
+
         self.valid_payload = {
-            "unique_id": "A002",
+            "unique_id": "A012",
             "first_name": "Jane",
             "last_name": "Doe",
             "date_of_birth": "1992-01-01",
@@ -93,3 +106,19 @@ class EmployeeViewSetTestCase(APITestCase):
         response = self.client.post(reverse('employee-list-create'), data=negative_annual_income_payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('annual_income', response.data)
+
+    def test_employee_list_pagination(self):
+        response = self.client.get(reverse('employee-list-create'), {'page': 2, 'page_size': 5})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_employee_list_search(self):
+        response = self.client.get(reverse('employee-list-create'), {'search': 'Doe'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_employee_list_ordering(self):
+        response = self.client.get(reverse('employee-list-create'), {'ordering': 'first_name'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_employee_list_filtering(self):
+        response = self.client.get(reverse('employee-list-create'), {'industry': 'IT'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,14 +1,27 @@
-from django.db.models import Avg
-from rest_framework import generics
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.pagination import PageNumberPagination
+
 from api_pandas.models import Employee
 from api_pandas.serializers import EmployeeSerializer
 import pandas as pd
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class EmployeeListCreate(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['first_name', 'last_name', 'industry']
+    ordering_fields = ['first_name', 'last_name', 'industry', 'date_of_birth', 'annual_income']
+    filterset_fields = ['industry']
+    pagination_class = CustomPagination
+
 
 class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
