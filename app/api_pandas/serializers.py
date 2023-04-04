@@ -6,7 +6,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
-    def validate_annual_income(self, value):
+    def validate_salary(self, value):
         if value < 0:
             raise serializers.ValidationError("Annual income must be a positive value.")
         return value
