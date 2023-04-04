@@ -131,7 +131,7 @@ class MockedDataCRUDTestCase(APITestCase):
         mocked_data_file_path = os.path.join(current_file_path, 'MOCK_DATA.json')
 
         with open(mocked_data_file_path, 'r') as file:
-            cls.mocked_data = json.load(file)[:10]
+            cls.mocked_data = json.load(file)[:500]
 
     def test_crud_employees_from_mocked_data(self):
         # test_create_employees_from_mocked_data
@@ -144,18 +144,9 @@ class MockedDataCRUDTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # test_retrieve_employees_from_mocked_data
-        response = self.client.get(reverse('employee-list-create'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        response_data = response.json()["results"]
-
         for employee_data in self.mocked_data:
-            found = False
-            for employee in response_data:
-                if employee['first_name'] == employee_data['first_name'] and employee['last_name'] == employee_data['last_name']:
-                    found = True
-                    break
-            self.assertTrue(found, f"Employee {employee_data['first_name']} {employee_data['last_name']} not found in the list")
+            response = self.client.get(reverse('employee-retrieve-update-destroy', kwargs={'pk': employee_data['id']}))
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # test_update_employees_from_mocked_data
         for employee_data in self.mocked_data:

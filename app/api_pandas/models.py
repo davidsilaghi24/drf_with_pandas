@@ -9,7 +9,7 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     date_of_birth = models.DateField()
-    industry = models.CharField(max_length=255)
+    industry = models.CharField(max_length=255, blank=True, null=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     years_of_experience = models.PositiveIntegerField(blank=True, null=True)
 
