@@ -1,16 +1,12 @@
 from rest_framework import serializers
-from .models import Employee
+from api_pandas.models import Employee
 
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = (
-            'unique_id',
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'industry',
-            'annual_income',
-            'years_of_experience',
-            'other_fields'
-        )
+        fields = '__all__'
+
+    def validate_annual_income(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Annual income must be a positive value.")
+        return value
