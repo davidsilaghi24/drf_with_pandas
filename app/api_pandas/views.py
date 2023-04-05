@@ -8,17 +8,23 @@ from api_pandas.models import Employee
 from api_pandas.serializers import EmployeeSerializer
 import pandas as pd
 
+
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
 
+
 class EmployeeListCreate(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    filter_backends = [
+        filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
+        ]
     search_fields = ['first_name', 'last_name', 'industry']
-    ordering_fields = ['first_name', 'last_name', 'industry', 'date_of_birth', 'annual_income']
+    ordering_fields = [
+        'first_name', 'last_name', 'industry', 'date_of_birth', 'annual_income'
+        ]
     filterset_fields = ['industry']
     pagination_class = CustomPagination
 
@@ -27,10 +33,12 @@ class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
+
 def get_employee_dataframe():
     queryset = Employee.objects.all()
     serializer = EmployeeSerializer(queryset, many=True)
     return pd.DataFrame(serializer.data)
+
 
 @api_view(['GET'])
 def average_age_per_industry(request):
@@ -40,12 +48,14 @@ def average_age_per_industry(request):
     result = df.groupby('industry')['age'].mean().reset_index()
     return Response(result.to_dict(orient='records'))
 
+
 @api_view(['GET'])
 def average_salary_per_industry(request):
     df = get_employee_dataframe()
     df['salary'] = pd.to_numeric(df['salary'])
     result = df.groupby('industry')['salary'].mean().reset_index()
     return Response(result.to_dict(orient='records'))
+
 
 @api_view(['GET'])
 def average_salary_per_experience(request):

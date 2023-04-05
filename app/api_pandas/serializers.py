@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from api_pandas.models import Employee
 
+
 class EmployeeSerializer(serializers.ModelSerializer):
-    date_of_birth = serializers.DateField(input_formats=['%d/%m/%Y', '%Y-%m-%d'])
+    date_of_birth = serializers.DateField(
+        input_formats=['%d/%m/%Y', '%Y-%m-%d']
+        )
 
     class Meta:
         model = Employee
@@ -10,5 +13,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     def validate_salary(self, value):
         if value and value < 0:
-            raise serializers.ValidationError("Annual income must be a positive value.")
+            raise serializers.ValidationError(
+                "Annual income must be a positive value."
+            )
         return value

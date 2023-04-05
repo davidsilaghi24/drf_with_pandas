@@ -2,8 +2,8 @@ from django.test import TestCase
 from api_pandas.models import Employee
 from datetime import date
 
-class EmployeeModelTestCase(TestCase):
 
+class EmployeeModelTestCase(TestCase):
     def setUp(self):
         self.employee = Employee.objects.create(
             first_name="John",
@@ -20,4 +20,7 @@ class EmployeeModelTestCase(TestCase):
         self.assertEqual(self.employee.date_of_birth, date(1990, 1, 1))
         self.assertEqual(self.employee.industry, "Technology")
         self.assertEqual(self.employee.salary, 50000.00)
-        self.assertEqual(self.employee.other_fields, {"title": "Software Developer"})
+        self.assertEqual(
+            self.employee.other_fields,
+            {"title": "Software Developer"}
+            )
