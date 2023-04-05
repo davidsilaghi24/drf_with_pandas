@@ -457,6 +457,17 @@ class MockedDataCRUDTestCase(APITestCase):
             122410.22153846153
             )
 
+        # test_median_salary_per_industry
+        response = self.client.get(reverse("median-salary-per-industry"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Add assertions to check response data for median_salary_per_industry
+        data = response.json()
+        advertising_median_salary = next(
+            item for item in data if item["industry"] == "Advertising"
+            )
+        self.assertAlmostEqual(advertising_median_salary["salary"], 86958.24)
+
         # test_delete_employees_from_mocked_data
         for employee_data in self.mocked_data:
             response = self.client.delete(

@@ -64,3 +64,12 @@ def average_salary_per_experience(request):
     df['salary'] = pd.to_numeric(df['salary'])
     result = df.groupby('years_of_experience')['salary'].mean().reset_index()
     return Response(result.to_dict(orient='records'))
+
+
+# interesting statistics
+@api_view(['GET'])
+def median_salary_per_industry(request):
+    df = get_employee_dataframe()
+    df['salary'] = pd.to_numeric(df['salary'])
+    result = df.groupby('industry')['salary'].median().reset_index()
+    return Response(result.to_dict(orient='records'))
