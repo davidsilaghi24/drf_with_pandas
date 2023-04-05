@@ -5,7 +5,8 @@ from api_pandas.views import (
     average_age_per_industry,
     average_salary_per_industry,
     average_salary_per_experience,
-    median_salary_per_industry
+    median_salary_per_industry,
+    percentage_of_employees_per_industry
 )
 
 urlpatterns = [
@@ -39,4 +40,9 @@ urlpatterns = [
         median_salary_per_industry,
         name="median-salary-per-industry",
     ),
+    path(
+        "statistics/percentage-employees/",
+        percentage_of_employees_per_industry,
+        name="percentage-employees-per-industry",
+     )
 ]

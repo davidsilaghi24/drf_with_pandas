@@ -73,3 +73,13 @@ def median_salary_per_industry(request):
     df['salary'] = pd.to_numeric(df['salary'])
     result = df.groupby('industry')['salary'].median().reset_index()
     return Response(result.to_dict(orient='records'))
+
+
+@api_view(['GET'])
+def percentage_of_employees_per_industry(request):
+    df = get_employee_dataframe()
+    total_employees = len(df)
+    industry_count = df['industry'].value_counts()
+    result = (industry_count / total_employees * 100).reset_index()
+    result.columns = ['industry', 'percentage']
+    return Response(result.to_dict(orient='records'))
