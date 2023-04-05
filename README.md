@@ -24,19 +24,11 @@ drf-spectacular (for API schema generation)
 Clone the repository
 
 git clone https://github.com/yourusername/employee-statistics-api.git
-Create and activate a virtual environment
 
-python -m venv env
-source env/bin/activate # On Windows, use `env\Scripts\activate`
-Install the required dependencies
-pip install -r requirements.txt
-Configure your database settings in settings.py
+Build docker and launch it
 
-Apply the migrations
-
-python manage.py migrate
-Run the server
-python manage.py runserver
+docker-compose build
+docker-compose up
 
 # Usage
 
